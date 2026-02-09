@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Projects & Expenses Tracker
 
-## Getting Started
+Internal tool for construction and interior design teams to track project budgets and expenses.
 
-First, run the development server:
+## Setup Instructions
 
+### Prerequisites
+- Node.js 18+
+- PostgreSQL 16+
+
+### Backend
 ```bash
+cd server
+npm install
+export DATABASE_URL="postgres://<user>@localhost:5432/project_expenses"
+psql "$DATABASE_URL" -f src/schema.sql
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+The API runs on `http://localhost:4000`.
+
+### Frontend
+```bash
+cd ..
+npm install
+npm run dev
+```
+The web app runs on `http://localhost:3000`.
+
+Optional: point the frontend at a different API base URL:
+```bash
+export NEXT_PUBLIC_API_URL="http://localhost:4000"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Database Schema Explanation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### `projects`
+- `id` (UUID, PK)
+- `name` (text, required)
+- `client_name` (text, required)
+- `estimated_budget` (numeric, non-negative)
+- `status` (text, default `Planning`)
+- `created_at` (timestamp)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### `expenses`
+- `id` (UUID, PK)
+- `project_id` (UUID, FK → projects.id, on delete cascade)
+- `description` (text, required)
+- `category` (text enum: `material`, `labor`, `other`)
+- `amount` (numeric, non-negative)
+- `created_at` (timestamp)
 
-## Learn More
+Each project can have many expenses. Deleting a project deletes its expenses.
 
-To learn more about Next.js, take a look at the following resources:
+## Assumptions
+- Currency display is AED (UI formatting only).
+- Authentication/authorization is not required for this internal MVP.
+- Budget totals in the UI are derived from `GET /projects` and updated optimistically after add/edit/delete.
+- Expense categories are limited to material/labor/other for consistency.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Improvements With More Time
+- Add authentication and role-based access.
+- Move optimistic UI updates to a cache layer (SWR/React Query).
+- Add pagination, filtering, and search for large project lists.
+- Add audit logs (who changed what, when).
+- Add tests for API routes and validation.
+- Add file uploads for invoices/receipts.

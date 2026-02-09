@@ -63,4 +63,11 @@ Each project can have many expenses. Deleting a project deletes its expenses.
 - Add pagination, filtering, and search for large project lists.
 - Add audit logs (who changed what, when).
 - Add tests for API routes and validation.
-- Add file uploads for invoices/receipts.
+  
+ <img width="1639" height="835" alt="Screenshot 2026-02-09 at 3 56 56 PM" src="https://github.com/user-attachments/assets/9d73f5a3-cf90-4ce9-ae6e-d17a06becabd" />
+
+ <img width="1620" height="831" alt="Screenshot 2026-02-09 at 3 58 19 PM" src="https://github.com/user-attachments/assets/510d2f46-f906-4738-ad5c-e3c17347c67f" />
+
+  <img width="1633" height="831" alt="Screenshot 2026-02-09 at 4 00 19 PM" src="https://github.com/user-attachments/assets/47969a4e-a809-4eda-a3ac-a1e42dc57a3b" />
+
+
